@@ -4,7 +4,7 @@ c = int(input('Enter an integer c: '))
 
 if a == b == c:
     print('3')
-elif a == b != c or a == c != b or b == c != a:
+elif a == b or a == c or b == c:
     print('2')
 else:
     print('0')
