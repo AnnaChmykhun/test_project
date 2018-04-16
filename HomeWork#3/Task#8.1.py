@@ -2,9 +2,7 @@ def enter_word():
     while True:
         word = input('Enter word: ').strip()
         if ' ' not in word:
-            result = word
-            break
-    return result
+            return word
 
 
 r = enter_word()

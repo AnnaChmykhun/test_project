@@ -1,14 +1,13 @@
 def triangle(a, b, c):
     if a + b > c and a + c > b and b + c > a:
         if a == b == c:
-            result = 'Equilateral triangle'
+            return 'Equilateral triangle'
         elif a == b or b == c or a == c:
-            result = 'Isosceles triangle'
+            return 'Isosceles triangle'
         else:
-            result = 'Versatile triangle'
+            return 'Versatile triangle'
     else:
-        result = 'Not a triangle'
-    return result
+        return 'Not a triangle'
 
 
 a1 = float(input('Enter positive number a: '))

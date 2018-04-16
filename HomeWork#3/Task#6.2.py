@@ -1,9 +1,8 @@
 def is_triangle(a, b, c):
     if a + b > c and a + c > b and b + c > a:
-        result = True
+        return True
     else:
-        result = False
-    return result
+        return False
 
 
 a1 = float(input('Enter positive number a: '))

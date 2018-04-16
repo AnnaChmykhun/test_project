@@ -4,11 +4,9 @@ def enter_number():
         try:
             number = float(number)
         except ValueError:
-            pass
+            print('This is not number!')
         else:
-            result = number
-            break
-    return result
+            return number
 
 
 r = enter_number()
