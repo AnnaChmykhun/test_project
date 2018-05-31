@@ -7,16 +7,25 @@ def base_url():
     return 'http://pulse-rest-testing.herokuapp.com/'
 
 
+# @pytest.fixture(scope="module")
+# def add_remove_book(base_url, request):
+#     book = {'title': 'Alice in Wonderland', 'author': 'Lewis Carroll'}
+#     r = requests.post(url=base_url + 'books/', data=book)
+# #    book.update([('id', r.json()['id'])])
+#     book['id'] = r.json()['id']
+#
+#     def fin():
+#         requests.delete(url=base_url + 'books/' + str(book['id']) + '/')
+#     request.addfinalizer(fin)
+#     return book
+
 @pytest.fixture(scope="module")
-def add_remove_book(base_url, request):
+def add_remove_book(base_url):
     book = {'title': 'Alice in Wonderland', 'author': 'Lewis Carroll'}
     r = requests.post(url=base_url + 'books/', data=book)
-    book.update([('id', r.json()['id'])])
-
-    def fin():
-        requests.delete(url=base_url + 'books/' + str(book['id']) + '/')
-    request.addfinalizer(fin)
-    return book
+    book['id'] = r.json()['id']
+    yield book
+    requests.delete(url=base_url + 'books/' + str(book['id']) + '/')
 
 
 @pytest.fixture(scope="function")
@@ -34,8 +43,7 @@ def add_remove_book_del(base_url):
     r = requests.post(url=base_url + 'books/', data=book)
     book.update([('id', r.json()['id'])])
     yield book
-    if book:
-        requests.delete(url=base_url + 'books/' + str(book['id']) + '/')
+    requests.delete(url=base_url + 'books/' + str(book['id']) + '/')
 
 
 new_info = [{'title': 'To Kill a Mockingbird', 'author': 'Harper Lee'},
@@ -48,3 +56,11 @@ names_of_tests = ['letters', 'numbers', 'special symbols']
 def parametrization_upd(request):
     new_book = request.param
     yield new_book
+
+
+@pytest.fixture(scope='function')
+def remove_book_cre(base_url):
+    book = {}
+    yield book
+    if 'id' in book.keys():
+        requests.delete(url=base_url + 'books/' + str(book['id']) + '/')

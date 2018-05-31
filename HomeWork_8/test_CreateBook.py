@@ -5,14 +5,13 @@ def remove_book(info):
     requests.delete(url='http://pulse-rest-testing.herokuapp.com/' + 'books/' + str(info) + '/')
 
 
-def test_create_positive(base_url):
-    book = {'title': 'Eat.Pray.Love', 'author': 'Elizabeth Gilbert'}
-    r = requests.post(url=base_url + 'books/', data=book)
+def test_create_positive(base_url, remove_book_cre):
+    remove_book_cre.update({'title': 'Eat.Pray.Love', 'author': 'Elizabeth Gilbert'})
+    r = requests.post(url=base_url + 'books/', data=remove_book_cre)
     assert r.status_code == 201
     act_body = r.json()
-    book.update([('id', act_body['id'])])
-    assert act_body == book
-    remove_book(book['id'])
+    remove_book_cre.update([('id', act_body['id'])])
+    assert act_body == remove_book_cre
 
 
 def test_create_no_data(base_url):
@@ -100,24 +99,23 @@ def test_create_length_limit_author(base_url):
     assert act_body == exp_body
 
 
-def test_create_wrong_data_type(base_url):
-    book = {'title': 102589, 'author': 15.289}
-    r = requests.post(url=base_url + 'books/', data=book)
+def test_create_wrong_data_type(base_url, remove_book_cre):
+    remove_book_cre.update({'title': 102589, 'author': 15.289})
+    r = requests.post(url=base_url + 'books/', data=remove_book_cre)
     assert r.status_code == 201
     act_body = r.json()
     exp_body = {'title': '102589', 'author': '15.289'}
     exp_body.update([('id', act_body['id'])])
+    remove_book_cre.update([('id', act_body['id'])])
     assert act_body == exp_body
-    remove_book(exp_body['id'])
 
 
-def test_create_already_created_book(base_url):
-    book = {'title': 'The Girl on the Train', 'author': 'Paula Hawkins'}
-    r_created = requests.post(url=base_url + 'books/', data=book)
-    r = requests.post(url=base_url + 'books/', data=book)
+def test_create_already_created_book(base_url, remove_book_cre):
+    remove_book_cre.update({'title': 'The Girl on the Train', 'author': 'Paula Hawkins'})
+    r_created = requests.post(url=base_url + 'books/', data=remove_book_cre)
+    r = requests.post(url=base_url + 'books/', data=remove_book_cre)
     assert r.status_code == 201
     act_body = r.json()
-    book.update([('id', act_body['id'])])
-    assert act_body == book
+    remove_book_cre.update([('id', act_body['id'])])
+    assert act_body == remove_book_cre
     remove_book(r_created.json()['id'])
-    remove_book(book['id'])
