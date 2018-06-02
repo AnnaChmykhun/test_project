@@ -1,5 +1,6 @@
 import pytest
 import requests
+import json
 
 
 @pytest.fixture(scope='session')
@@ -45,14 +46,27 @@ def add_remove_book_del(base_url):
     yield book
     requests.delete(url=base_url + 'books/' + str(book['id']) + '/')
 
+# Usual parametrization
+# new_info = [{'title': 'To Kill a Mockingbird', 'author': 'Harper Lee'},
+#             {'title': '112233', 'author': '445566'},
+#             {'title': '!£$%^()>?', 'author': '<>?@:}{^&'}]
+# names_of_tests = ['letters', 'numbers', 'special symbols']
+#
+#
+# @pytest.fixture(params=new_info, ids=names_of_tests, scope="function")
+# def parametrization_upd(request):
+#     new_book = request.param
+#     yield new_book
 
-new_info = [{'title': 'To Kill a Mockingbird', 'author': 'Harper Lee'},
-            {'title': '112233', 'author': '445566'},
-            {'title': '!£$%^()>?', 'author': '<>?@:}{^&'}]
+
+# Parametrization with reading data from json file
+with open('info.json', encoding='utf-8') as data_file:
+    data = json.loads(data_file.read())
+
 names_of_tests = ['letters', 'numbers', 'special symbols']
 
 
-@pytest.fixture(params=new_info, ids=names_of_tests, scope="function")
+@pytest.fixture(params=data, ids=names_of_tests, scope="function")
 def parametrization_upd(request):
     new_book = request.param
     yield new_book
